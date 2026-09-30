@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTFA Air Quality Management & Fan Control</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/dashboard.css">
+</head>
+<body class="bg-[#080d1a] text-slate-100 antialiased min-h-screen flex selection:bg-cyan-500 selection:text-white">
+
+  <!-- ============================================================ -->
+  <!-- 1. LEFT SIDEBAR NAVIGATION (Desktop)                        -->
+  <!-- ============================================================ -->
+  <aside class="sidebar hidden md:flex flex-col justify-between p-4 border-r border-slate-800/80 bg-[#070b14]">
+    <div class="space-y-6">
+      <!-- Logo Branding -->
+      <div class="px-3 py-2 flex items-center gap-3">
+        <div class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-emerald-400">CTFA</div>
+        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-bold">BMS v2</span>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1">
+        <a href="#" class="sidebar-nav-item active" data-view="dashboard">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="trends">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+          <span>Trends</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="alarms">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span>Alarms</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="reports">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+
+        <a href="#" class="sidebar-nav-item" data-view="settings">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Simulator Drawer Quick Trigger -->
+    <div class="pt-4 border-t border-slate-800">
+      <button id="btn-open-simulator" class="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(6,182,212,0.25)] border border-cyan-400/30">
+        <span>🧪 Simulator Controls</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- 2. MOBILE SIDEBAR DRAWER & BACKDROP                          -->
+  <!-- ============================================================ -->
+  <div id="mobile-sidebar-backdrop" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+  <aside id="mobile-sidebar" class="fixed top-0 left-0 h-full w-72 bg-[#070b14] text-white p-5 shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 flex flex-col justify-between md:hidden border-r border-slate-800">
+    <div class="space-y-6">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div class="text-2xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-300 to-emerald-400">CTFA</div>
+        <button id="btn-close-mobile-menu" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center font-bold text-lg">
+          ✕
+        </button>
+      </div>
+
+      <nav class="space-y-1.5">
+        <a href="#" class="sidebar-nav-item active flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-view="dashboard">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-view="trends">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+          </svg>
+          <span>Trends</span>
+        </a>
+        <a href="#" class="sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-view="alarms">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <span>Alarms</span>
+        </a>
+        <a href="#" class="sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-view="reports">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="#" class="sidebar-nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" data-view="settings">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="pt-4 border-t border-slate-800">
+      <button id="btn-open-simulator-mobile" class="w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm">
+        <span>🧪 Simulator Controls</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================================================ -->
+  <!-- 3. MAIN APPLICATION CONTENT AREA                             -->
+  <!-- ============================================================ -->
+  <div class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+    <!-- Top Navigation Header (Removed Admin & Logout, Preserved Simulator) -->
+    <header class="bg-[#0c162d]/90 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+      <div class="flex items-center gap-3 sm:gap-4">
+        <!-- Mobile hamburger button -->
+        <button id="btn-mobile-menu" type="button" aria-label="Open Navigation Menu" class="md:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-white leading-tight">M3M Altitude Flat 1401</h2>
+          <p class="text-[11px] sm:text-xs text-slate-400 font-medium">Client: M3M</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Simulator Quick Trigger in Header -->
+        <button id="btn-open-simulator-header" class="px-3 py-1.5 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-900/60 hover:border-cyan-400 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(6,182,212,0.15)]">
+          <span>🧪</span>
+          <span>Simulator</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="p-4 sm:p-6 md:p-8 flex-1 max-w-7xl w-full mx-auto space-y-6">
+
+      <!-- ======================================================== -->
+      <!-- VIEW 1: DASHBOARD (MAIN)                                 -->
+      <!-- ======================================================== -->
+      <div id="view-dashboard" class="dashboard-view space-y-6">
+
+        <!-- CTFA Current State Banner (High-Tech Glassmorphic Command Banner) -->
+        <div id="ctfa-state-banner" class="state-banner-slate rounded-2xl p-5 sm:p-6 shadow-2xl transition-all duration-300 relative overflow-hidden backdrop-blur-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+              <!-- Leaf / Cloud / Droplet Icon badge with Glowing Accent -->
+              <div id="state-icon-badge" class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-2xl shadow-sm shrink-0">
+                ✓
+              </div>
+              <div>
+                <span class="text-[11px] font-mono font-semibold uppercase tracking-wider text-cyan-400/90 flex items-center gap-1.5">● Current CTFA State</span>
+                <h3 id="state-title" class="text-xl sm:text-2xl font-black text-slate-100 tracking-tight">Normal Air Quality - CTFA Off</h3>
+                <p id="state-desc" class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">All environmental readings within acceptable thresholds</p>
+              </div>
+            </div>
+
+            <!-- Last updated & Device Connection Status (Driven by /api/events) -->
+            <div class="flex flex-col sm:items-end text-xs text-slate-400 shrink-0">
+              <div class="text-[10px] font-mono uppercase text-slate-400 tracking-wider">Last Telemetry Sync</div>
+              <div id="txt-last-updated" class="font-mono text-xs sm:text-sm font-semibold text-slate-200 mt-0.5">30 Sep 2026, 04:00 PM</div>
+              <a href="http://178.16.137.20:3101/api/events" target="_blank" rel="noopener noreferrer" id="status-indicator-wrap" class="flex items-center gap-1.5 text-rose-400 font-mono font-semibold mt-1.5 text-xs hover:text-rose-300 transition-colors" title="Live Hardware Event Stream: http://178.16.137.20:3101/api/events">
+                <span id="dot-system-status" class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.8)]"></span>
+                <span id="txt-system-status">Disconnected</span>
+                <svg class="w-3 h-3 text-slate-500 ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3x Paired Comparative Telemetry Cards (NO CHARTS - Clean, High-Contrast Metrics) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+
+          <!-- 1. Particulate Matter (PM2.5) Paired Module -->
+          <div class="telemetry-card p-5 cursor-pointer" onclick="document.getElementById('btn-open-simulator').click();">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                    <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-300">PM 2.5 Particulates</div>
+                  <div class="text-[10px] font-mono text-slate-500">Air Pollution Index</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/25">PURGE &gt; 60</span>
+            </div>
+
+            <!-- Indoor vs Outdoor Comparative Split -->
+            <div class="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Indoor Air
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight mt-1" id="val-in-pm25">42</div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">µg/m³</div>
+              </div>
+              <div class="border-l border-slate-800/80 pl-4">
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Outdoor Air
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-300 font-mono tracking-tight mt-1" id="val-out-pm25">28</div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">µg/m³</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Carbon Dioxide (CO2) Paired Module -->
+          <div class="telemetry-card p-5 cursor-pointer" onclick="document.getElementById('btn-open-simulator').click();">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-sm">
+                  ☁️
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-300">Carbon Dioxide (CO₂)</div>
+                  <div class="text-[10px] font-mono text-slate-500">Freshness Level</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/25">PURGE &gt; 800</span>
+            </div>
+
+            <!-- Indoor vs Outdoor Comparative Split -->
+            <div class="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Indoor Air
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight mt-1" id="val-in-co2">650</div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">PPM</div>
+              </div>
+              <div class="border-l border-slate-800/80 pl-4">
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span> Outdoor Air
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-300 font-mono tracking-tight mt-1" id="val-out-co2">420</div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">PPM</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Dew Point & Condensation Risk Paired Module -->
+          <div class="telemetry-card p-5 cursor-pointer" onclick="document.getElementById('btn-open-simulator').click();">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-sm">
+                  💧
+                </div>
+                <div>
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-300">Dew Point &amp; Humidity</div>
+                  <div class="text-[10px] font-mono text-slate-500">Condensation Safety</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/25">BUFFER: 2.0°C</span>
+            </div>
+
+            <!-- Indoor vs Outdoor Comparative Split -->
+            <div class="grid grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
+              <div>
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Indoor Dew
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight mt-1 flex items-baseline">
+                  <span id="val-in-dew">15.0</span><span class="text-sm font-normal text-slate-400 ml-1">°C</span>
+                </div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">
+                  <span id="tag-in-temp" class="text-slate-200 font-semibold">24°C</span> &middot; <span id="tag-in-hum" class="text-slate-300 font-semibold">55% Hum</span>
+                </div>
+              </div>
+              <div class="border-l border-slate-800/80 pl-4">
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span> Outdoor Dew
+                </div>
+                <div class="text-3xl sm:text-4xl font-black text-slate-300 font-mono tracking-tight mt-1 flex items-baseline">
+                  <span id="val-out-dew">17.0</span><span class="text-sm font-normal text-slate-400 ml-1">°C</span>
+                </div>
+                <div class="text-[11px] font-mono text-slate-400 mt-0.5">
+                  <span id="tag-out-temp" class="text-slate-200 font-semibold">28°C</span> &middot; <span id="tag-out-hum" class="text-slate-300 font-semibold">45% Hum</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CTFA Actuation Status Card (Fan Animation & Control) -->
+        <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-xl backdrop-blur-md">
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">CTFA ACTUATION &amp; GATEWAY STATUS</div>
+            <div class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 border border-slate-700">TARGET PIN: GPIO4</div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-800/80">
+
+            <!-- 1. Fan Status with ANIMATED SPINNING FAN -->
+            <div class="flex items-center gap-4 pt-2 sm:pt-0 sm:px-2">
+              <div class="w-12 h-12 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center shrink-0 overflow-hidden shadow-inner">
+                <svg id="fan-status-icon" class="w-7 h-7 fan-icon fan-stopped text-slate-500" viewBox="0 0 24 24" fill="currentColor">
+                  <rect width="24" height="24" fill="none"/>
+                  <circle cx="12" cy="12" r="3.2"/>
+                  <path d="M12 12c.6-3.6 3.6-7.8 6.8-7.5 1.8.2 2 2.5.2 4.8-1.9 2.5-4.5 3.3-7 2.7z"/>
+                  <path d="M12 12c.6-3.6 3.6-7.8 6.8-7.5 1.8.2 2 2.5.2 4.8-1.9 2.5-4.5 3.3-7 2.7z" transform="rotate(90 12 12)"/>
+                  <path d="M12 12c.6-3.6 3.6-7.8 6.8-7.5 1.8.2 2 2.5.2 4.8-1.9 2.5-4.5 3.3-7 2.7z" transform="rotate(180 12 12)"/>
+                  <path d="M12 12c.6-3.6 3.6-7.8 6.8-7.5 1.8.2 2 2.5.2 4.8-1.9 2.5-4.5 3.3-7 2.7z" transform="rotate(270 12 12)"/>
+                  <circle cx="12" cy="12" r="1.3" fill="#ffffff"/>
+                </svg>
+              </div>
+              <div>
+                <div class="text-[11px] font-mono text-slate-400 font-semibold uppercase">Damper / Fan State</div>
+                <div id="txt-fan-status" class="text-xl font-black text-slate-400 tracking-tight">OFF</div>
+              </div>
+            </div>
+
+            <!-- 2. Mode -->
+            <div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-6">
+              <div class="w-12 h-12 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center text-slate-300 text-xl shrink-0 shadow-inner">
+                ⚙️
+              </div>
+              <div>
+                <div class="text-[11px] font-mono text-slate-400 font-semibold uppercase">Operation Mode</div>
+                <div class="text-xl font-black text-slate-100 tracking-tight">Automatic</div>
+              </div>
+            </div>
+
+            <!-- 3. Next Evaluation Timer -->
+            <div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-6">
+              <div class="w-12 h-12 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center text-cyan-400 text-xl shrink-0 shadow-inner">
+                🕒
+              </div>
+              <div>
+                <div class="text-[11px] font-mono text-slate-400 font-semibold uppercase">Next Re-evaluation</div>
+                <div id="txt-countdown" class="text-xl font-black text-cyan-400 font-mono tracking-tight">in 30 seconds</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- VIEW 2: TRENDS & ANALYTICS                               -->
+      <!-- ======================================================== -->
+      <div id="view-trends" class="dashboard-view hidden space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-white">Sensor Trends Analytics</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Analyze historical sensor fluctuations and records</p>
+        </div>
+
+        <!-- Metric Filter Tabs -->
+        <div class="flex flex-wrap gap-2">
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-cyan-500/30 bg-cyan-600 text-white text-xs font-semibold shadow-[0_0_10px_rgba(6,182,212,0.3)]" data-metric="in_pm25">Indoor PM 2.5</button>
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/80 text-slate-300 text-xs font-semibold hover:bg-slate-700" data-metric="out_pm25">Outdoor PM 2.5</button>
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/80 text-slate-300 text-xs font-semibold hover:bg-slate-700" data-metric="in_co2">Indoor CO₂</button>
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/80 text-slate-300 text-xs font-semibold hover:bg-slate-700" data-metric="out_co2">Outdoor CO₂</button>
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/80 text-slate-300 text-xs font-semibold hover:bg-slate-700" data-metric="in_dew">Indoor Dew Point</button>
+          <button class="trend-metric-tab px-3.5 py-1.5 rounded-lg border border-slate-700/60 bg-slate-800/80 text-slate-300 text-xs font-semibold hover:bg-slate-700" data-metric="out_dew">Outdoor Dew Point</button>
+        </div>
+
+        <!-- Hourly Chart Card -->
+        <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 shadow-xl backdrop-blur-md">
+          <h3 class="text-sm font-semibold text-slate-200 mb-4">Hourly Chart (Today)</h3>
+          <div class="w-full h-44 overflow-hidden">
+            <svg id="chart-hourly" viewBox="0 0 700 180" class="w-full h-full"></svg>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-mono">
+            <span>12 AM</span><span>4 AM</span><span>8 AM</span><span>12 PM</span><span>4 PM</span><span>8 PM</span><span>11 PM</span>
+          </div>
+        </div>
+
+        <!-- Daily Average Card -->
+        <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 shadow-xl backdrop-blur-md">
+          <h3 class="text-sm font-semibold text-slate-200 mb-4">Daily Average (Current Month)</h3>
+          <div class="w-full h-44 overflow-hidden">
+            <svg id="chart-daily" viewBox="0 0 700 180" class="w-full h-full"></svg>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-mono">
+            <span>Day 1</span><span>Day 5</span><span>Day 10</span><span>Day 15</span><span>Day 20</span><span>Day 25</span><span>Day 30</span>
+          </div>
+        </div>
+
+        <!-- Monthly Trend Card -->
+        <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 shadow-xl backdrop-blur-md">
+          <h3 class="text-sm font-semibold text-slate-200 mb-4">Monthly Trend (Annual Overview)</h3>
+          <div class="w-full h-44 overflow-hidden">
+            <svg id="chart-monthly" viewBox="0 0 700 180" class="w-full h-full"></svg>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-500 mt-2 font-mono">
+            <span>Jan</span><span>Mar</span><span>May</span><span>Jul</span><span>Sep</span><span>Nov</span><span>Dec</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- VIEW 3: ALARMS                                           -->
+      <!-- ======================================================== -->
+      <div id="view-alarms" class="dashboard-view hidden space-y-6">
+        <!-- Active Alert Banner -->
+        <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-center justify-between shadow-lg">
+          <div class="flex items-center gap-2.5 text-amber-300 font-semibold text-xs">
+            <span>⚠️</span>
+            <span>Alert: Indoor CO₂ has crossed 600 ppm limit!</span>
+          </div>
+          <button class="text-amber-400 hover:text-amber-200 font-bold text-xs">✕</button>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-white">System Alarms</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Configure custom thresholds and toggle active notifications</p>
+          </div>
+          <button class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-lg font-semibold text-xs transition-all shadow-[0_0_12px_rgba(6,182,212,0.25)]">
+            + Add Alarm
+          </button>
+        </div>
+
+        <!-- Alarms List -->
+        <div id="alarms-list-container" class="space-y-3">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- VIEW 4: REPORTS & CSV LOGS                               -->
+      <!-- ======================================================== -->
+      <div id="view-reports" class="dashboard-view hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-bold text-white">Daily Sensor Logs</h2>
+            <p class="text-xs text-slate-400 mt-0.5">Export and view detailed historical fresh air telemetry</p>
+          </div>
+          <button id="btn-download-csv" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg font-semibold text-xs flex items-center gap-1.5 shadow-[0_0_12px_rgba(16,185,129,0.25)] transition-all">
+            <span>📥</span>
+            <span>Download CSV</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-800/80 border-b border-slate-700 text-slate-400 font-mono font-semibold">
+                <tr>
+                  <th class="py-3 px-3">#</th>
+                  <th class="py-3 px-3">Timestamp</th>
+                  <th class="py-3 px-3">In PM2.5</th>
+                  <th class="py-3 px-3">Out PM2.5</th>
+                  <th class="py-3 px-3">In CO₂</th>
+                  <th class="py-3 px-3">Out CO₂</th>
+                  <th class="py-3 px-3">In Dew</th>
+                  <th class="py-3 px-3">Out Dew</th>
+                </tr>
+              </thead>
+              <tbody id="reports-tbody" class="divide-y divide-slate-800 text-slate-300">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Footer -->
+          <div class="p-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span>Page 1 of 5</span>
+            <div class="flex items-center gap-1">
+              <button class="px-2.5 py-1 border border-slate-700 rounded text-slate-400 hover:bg-slate-800">Prev</button>
+              <button class="px-2.5 py-1 bg-cyan-600 text-white font-semibold rounded">1</button>
+              <button class="px-2.5 py-1 border border-slate-700 rounded text-slate-400 hover:bg-slate-800">2</button>
+              <button class="px-2.5 py-1 border border-slate-700 rounded text-slate-400 hover:bg-slate-800">3</button>
+              <button class="px-2.5 py-1 border border-slate-700 rounded text-slate-400 hover:bg-slate-800">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================== -->
+      <!-- VIEW 5: SETTINGS & PROFILE                               -->
+      <!-- ======================================================== -->
+      <div id="view-settings" class="dashboard-view hidden space-y-6">
+        <div>
+          <h2 class="text-xl font-bold text-white">Settings & Profile</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Manage alerts, system preferences, region configurations, and account logs</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column Cards -->
+          <div class="lg:col-span-6 space-y-6">
+            <!-- Notifications Card -->
+            <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl space-y-4">
+              <h3 class="text-sm font-semibold text-slate-200">Notifications</h3>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-semibold text-slate-300">Push Notifications</div>
+                  <div class="text-[11px] text-slate-500">Receive instant push alerts for threshold spikes</div>
+                </div>
+                <input type="checkbox" checked class="w-4 h-4 accent-cyan-500">
+              </div>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                <div>
+                  <div class="text-xs font-semibold text-slate-300">Email Alerts</div>
+                  <div class="text-[11px] text-slate-500">Receive weekly air quality telemetry reports</div>
+                </div>
+                <input type="checkbox" class="w-4 h-4 accent-cyan-500">
+              </div>
+            </div>
+
+            <!-- Appearance Card -->
+            <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl space-y-4">
+              <h3 class="text-sm font-semibold text-slate-200">Appearance</h3>
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-semibold text-slate-300">Dark Theme</div>
+                  <div class="text-[11px] text-cyan-400">Cyber Command Center active</div>
+                </div>
+                <input type="checkbox" checked disabled class="w-4 h-4 accent-cyan-500">
+              </div>
+            </div>
+
+            <!-- Region & Timezone -->
+            <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 shadow-xl space-y-4">
+              <h3 class="text-sm font-semibold text-slate-200">Region & Timezone</h3>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-300">Current Region</span>
+                <select class="text-xs border border-slate-700 rounded px-2.5 py-1.5 bg-slate-800 text-slate-200">
+                  <option>Asia/Kolkata</option>
+                  <option>UTC</option>
+                  <option>America/New_York</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: User Information -->
+          <div class="lg:col-span-6 bg-slate-900/90 rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
+            <h3 class="text-sm font-semibold text-slate-200">User Information</h3>
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs text-slate-400 font-medium">Name</label>
+                <input type="text" value="Mike Andrew" class="w-full text-xs px-3 py-2 border border-slate-700 rounded-lg bg-slate-800 text-slate-200 outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400 font-medium">Email</label>
+                <input type="email" value="mike.andrew@m3m.com" class="w-full text-xs px-3 py-2 border border-slate-700 rounded-lg bg-slate-800 text-slate-200 outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400 font-medium">Phone Number</label>
+                <input type="text" value="+91 98765 43210" class="w-full text-xs px-3 py-2 border border-slate-700 rounded-lg bg-slate-800 text-slate-200 outline-none focus:border-cyan-500">
+              </div>
+              <div>
+                <label class="text-xs text-slate-400 font-medium">Address</label>
+                <textarea rows="2" class="w-full text-xs px-3 py-2 border border-slate-700 rounded-lg bg-slate-800 text-slate-200 outline-none focus:border-cyan-500">M3M Altitude Flat 1401, Golf Course Road, Gurugram</textarea>
+              </div>
+            </div>
+            <div class="pt-4 flex items-center gap-3">
+              <button class="px-4 py-2 border border-slate-700 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800">Edit Profile</button>
+              <button id="btn-save-settings" class="px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-lg text-xs font-semibold shadow-[0_0_12px_rgba(16,185,129,0.25)]">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 4. SIMULATOR CONTROLS SLIDE-OVER DRAWER                      -->
+  <!-- ============================================================ -->
+  <!-- Backdrop -->
+  <div id="drawer-backdrop" class="fixed inset-0 drawer-backdrop z-40 hidden"></div>
+
+  <!-- Slide-over Drawer Panel -->
+  <aside id="simulator-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-[#0b1329] border-l border-slate-800 shadow-2xl z-50 transform translate-x-full drawer-panel flex flex-col justify-between text-slate-100">
+    <div class="p-5 overflow-y-auto space-y-5">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="text-base font-bold text-white">Relay &amp; Sensor Simulator</h3>
+          <p class="text-xs text-slate-400">Inputs directly control the dashboard telemetry and fan</p>
+        </div>
+        <button id="btn-close-simulator" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center font-bold text-lg">
+          ✕
+        </button>
+      </div>
+
+      <!-- Direct Manual Override -->
+      <div class="p-3.5 bg-slate-900 border border-slate-800 text-white rounded-xl space-y-2">
+        <div class="text-xs font-semibold text-slate-300">Direct Hardware Relay Pulse</div>
+        <div class="grid grid-cols-2 gap-2">
+          <button id="sim-btn-manual-on" class="py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)]">⚡ Force ON</button>
+          <button id="sim-btn-manual-off" class="py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[0_0_10px_rgba(244,63,94,0.3)]">🛑 Force OFF</button>
+        </div>
+      </div>
+
+      <!-- 1-Click Presets -->
+      <div>
+        <label class="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block mb-2">1-Click Test Scenarios</label>
+        <div id="sim-presets-container" class="space-y-2">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Sliders for Sensor Inputs -->
+      <div class="space-y-4 pt-3 border-t border-slate-800">
+        <label class="text-xs font-mono font-bold uppercase tracking-wider text-slate-400 block">Fine-tune Sensor Readings</label>
+
+        <!-- 1. Outdoor Air Psychrometrics -->
+        <div class="p-3.5 rounded-xl bg-amber-950/20 border border-amber-500/30 space-y-2.5">
+          <div class="flex justify-between items-center text-xs font-semibold text-amber-200">
+            <span class="flex items-center gap-1">🌧️ Outdoor Temperature</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-out-temp" step="0.5" value="28.0" class="w-16 text-right px-1.5 py-0.5 border border-amber-500/40 rounded bg-slate-900 text-amber-300 text-xs font-semibold outline-none"> °C
+            </div>
+          </div>
+          <input type="range" id="sim-range-out-temp" min="0" max="50" step="0.5" value="28.0" class="w-full accent-amber-500 cursor-pointer">
+
+          <div class="flex justify-between items-center text-xs font-semibold text-amber-200 pt-1 border-t border-amber-500/20">
+            <span>Outdoor Humidity</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-out-hum" value="45" class="w-14 text-right px-1.5 py-0.5 border border-amber-500/40 rounded bg-slate-900 text-amber-300 text-xs font-semibold outline-none">%
+            </div>
+          </div>
+          <input type="range" id="sim-range-out-hum" min="0" max="100" value="45" class="w-full accent-amber-500 cursor-pointer">
+
+          <div class="flex justify-between items-center text-[11px] font-semibold text-amber-300 pt-1 border-t border-amber-500/20">
+            <span>Outdoor Dew Point:</span>
+            <span class="font-mono bg-slate-900 px-2 py-0.5 rounded border border-amber-500/30 text-amber-200"><span id="sim-disp-out-dew">17.0</span> °C</span>
+          </div>
+        </div>
+
+        <!-- 2. Indoor Room & Surface Threshold -->
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2.5">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200">
+            <span class="flex items-center gap-1">🏠 Indoor Room Temp</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-in-temp" step="0.5" value="24.0" class="w-16 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> °C
+            </div>
+          </div>
+          <input type="range" id="sim-range-in-temp" min="15" max="35" step="0.5" value="24.0" class="w-full accent-cyan-500 cursor-pointer">
+
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 pt-1 border-t border-slate-800">
+            <span title="Accounts for cold AC vents and ducts">AC Safety Buffer</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-safety-buffer" step="0.5" value="2.0" class="w-14 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> °C
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 pt-1 border-t border-slate-800">
+            <span>Indoor Humidity</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-in-hum" value="55" class="w-14 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none">%
+            </div>
+          </div>
+          <input type="range" id="sim-range-in-hum" min="0" max="100" value="55" class="w-full accent-cyan-500 cursor-pointer">
+
+          <div class="space-y-1.5 pt-1.5 border-t border-slate-800 text-[11px]">
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Cold Surface Threshold (Temp - Buffer):</span>
+              <span class="font-mono font-semibold text-slate-200"><span id="sim-disp-threshold">22.0</span> °C</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span>Indoor Air Dew Point:</span>
+              <span class="font-mono font-semibold text-slate-200"><span id="sim-disp-in-dew">15.0</span> °C</span>
+            </div>
+            <!-- Condensation Risk Alert Badge inside drawer -->
+            <div id="sim-dew-risk-badge" class="mt-2 p-2 rounded-lg text-xs font-semibold text-center bg-emerald-950/40 text-emerald-300 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+              ✓ Safe Dew Point (Ventilation Allowed)
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Indoor PM2.5 (Threshold: > 60) -->
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 mb-1">
+            <span>💨 Indoor PM 2.5 (Purge &gt; 60)</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-in-pm25" value="42" class="w-16 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> µg/m³
+            </div>
+          </div>
+          <input type="range" id="sim-range-in-pm25" min="0" max="300" value="42" class="w-full accent-cyan-500 cursor-pointer">
+        </div>
+
+        <!-- 4. Outdoor PM2.5 -->
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 mb-1">
+            <span>💨 Outdoor PM 2.5</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-out-pm25" value="28" class="w-16 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> µg/m³
+            </div>
+          </div>
+          <input type="range" id="sim-range-out-pm25" min="0" max="300" value="28" class="w-full accent-cyan-500 cursor-pointer">
+        </div>
+
+        <!-- 5. Indoor CO2 (Threshold: > 800) -->
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 mb-1">
+            <span>🌱 Indoor CO₂ (Purge &gt; 800)</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-in-co2" value="650" class="w-16 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> PPM
+            </div>
+          </div>
+          <input type="range" id="sim-range-in-co2" min="300" max="2000" value="650" class="w-full accent-cyan-500 cursor-pointer">
+        </div>
+
+        <!-- 6. Outdoor CO2 -->
+        <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+          <div class="flex justify-between items-center text-xs font-semibold text-slate-200 mb-1">
+            <span>🌱 Outdoor CO₂</span>
+            <div class="flex items-center gap-1 font-mono">
+              <input type="number" id="sim-out-co2" value="420" class="w-16 text-right px-1.5 py-0.5 border border-slate-700 rounded bg-slate-800 text-white text-xs font-semibold outline-none"> PPM
+            </div>
+          </div>
+          <input type="range" id="sim-range-out-co2" min="300" max="1000" value="420" class="w-full accent-cyan-500 cursor-pointer">
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <input type="checkbox" id="sim-chk-mock" class="w-4 h-4 accent-cyan-500 rounded">
+          <label for="sim-chk-mock" class="text-xs text-slate-400 cursor-pointer">Offline Simulation Mode (Skip physical relay API)</label>
+        </div>
+
+        <div id="sim-result-msg" class="hidden"></div>
+      </div>
+    </div>
+
+    <!-- Drawer Footer / Run Button -->
+    <div class="p-4 border-t border-slate-800 bg-[#09101f]">
+      <button id="btn-run-simulation" class="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all flex items-center justify-center gap-2">
+        <span>⚡ Evaluate &amp; Dispatch Live Signal</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Load Scripts in Order -->
+  <script src="./static/js/api.js"></script>
+  <script src="./static/js/dashboard.js"></script>
+</body>
+</html>
