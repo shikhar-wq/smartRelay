@@ -5,6 +5,7 @@ import threading
 import time
 import requests
 from flask import Flask, jsonify, render_template, request, Response
+from flask_cors import CORS
 from relay_class import RelayManager
 
 """
@@ -44,6 +45,7 @@ HOW TO INTEGRATE PHYSICAL SENSORS IN PRODUCTION:
 """
 
 app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Default to Live Hardware Mode so physical signals are dispatched
 DEFAULT_MAC = os.environ.get("RELAY_MAC", "004B12302844")
